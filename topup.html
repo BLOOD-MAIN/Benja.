@@ -36,16 +36,16 @@ header{height:220px;background:url('https://files.catbox.moe/qhr7sl.jpg') center
 #promoCode{width:50%;padding:8px;margin-top:10px;border-radius:5px;border:1px solid rgba(0,153,255,0.3);background:rgba(0,0,0,0.4);color:#fff;}
 #applyPromo{padding:8px 12px;margin-left:5px;background:#00b7ff;color:#000;border:none;border-radius:5px;cursor:pointer;font-weight:bold;}
 #clearCart{padding:8px 12px;margin-top:10px;background:#ff0055;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold;}
-/* Player ID styling */
 #playerId{flex:1;padding:10px 15px;border-radius:8px;border:1px solid #00b7ff;background:rgba(0,0,0,0.4);color:#fff;font-size:16px;outline:none;transition:0.3s;}
 #playerId:focus{border-color:#00eaff;box-shadow:0 0 10px #00eaff;background:rgba(0,0,0,0.6);}
 .player-id-container{margin-top:15px;display:flex;align-items:center;gap:10px;}
+footer{text-align:center;padding:10px;margin-top:20px;color:#00b7ff;}
 </style>
 </head>
 <body>
 <header></header>
 <div class="logo-area">
-  <img src="src/IMG-20251020-WA0000.jpg" alt="NIM Logo">
+  <img src="https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg" alt="NIM Logo">
   <h1>BENJA TOPUP STORE</h1>
   <p>Fast • Trusted • Secure</p>
 </div>
@@ -58,15 +58,12 @@ header{height:220px;background:url('https://files.catbox.moe/qhr7sl.jpg') center
 
   <div class="card">
     <h2>📋 Your Order</h2>
-    <div class="order-summary" id="orderSummary">
-      
-      <!-- Player ID Input -->
+    <div class="order-summary">
       <div class="player-id-container">
         <span>👤</span>
         <input type="text" id="playerId" placeholder="Enter your Free Fire ID">
       </div>
 
-      <!-- File Upload -->
       <label style="margin-top:15px;display:block;"><b>Upload Payment Receipt (PDF/Image):</b></label>
       <div class="file-upload" onclick="document.getElementById('receipt').click()">
         <span>📎 Choose File</span>
@@ -74,19 +71,16 @@ header{height:220px;background:url('https://files.catbox.moe/qhr7sl.jpg') center
       </div>
       <img id="receiptPreview" src="" alt="" style="display:none;"/>
 
-      <!-- Order Details -->
       <h3 style="margin-top:15px;color:#00eaff;">Order Details:</h3>
       <ul id="orderList" style="list-style:none;margin-top:10px;padding-left:0;"></ul>
       <p id="totalPrice" style="text-align:right;font-weight:bold;font-size:16px;margin-top:10px;">Total: 0 LKR</p>
 
-      <!-- Promo & Clear -->
       <div>
         <input type="text" id="promoCode" placeholder="Enter Promo Code">
         <button id="applyPromo" onclick="applyPromo()">Apply</button>
       </div>
       <button id="clearCart" onclick="clearCart()">Clear Cart</button>
 
-      <!-- WhatsApp Button -->
       <button class="whatsapp-btn" onclick="sendOrder()">🚀 Send Order via WhatsApp</button>
 
       <div id="success" class="success-message">
@@ -102,6 +96,8 @@ header{height:220px;background:url('https://files.catbox.moe/qhr7sl.jpg') center
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function(){
+
 const products = [
   {name:"Weekly Lite Membership",price:120,img:"https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg"},
   {name:"Weekly Membership",price:480,img:"https://i.ibb.co/XxPzttVP/af85c42caad4127d.jpg"},
@@ -117,9 +113,8 @@ const totalPrice = document.getElementById("totalPrice");
 const receiptPreview = document.getElementById("receiptPreview");
 let order = [], total = 0, discount = 0;
 
-// Create product cards
 products.forEach((p,i)=>{
-  let item = document.createElement("div");
+  const item = document.createElement("div");
   item.className = "item";
   item.innerHTML = `
     <img src="${p.img}" alt="${p.name}">
@@ -134,11 +129,12 @@ products.forEach((p,i)=>{
   packageContainer.appendChild(item);
 });
 
-function changeQty(index, delta){
-  let currentQty = parseInt(document.getElementById(`qty-${index}`).textContent);
-  currentQty += delta;
-  if(currentQty < 0) currentQty = 0;
-  document.getElementById(`qty-${index}`).textContent = currentQty;
+window.changeQty = function(index, delta){
+  const qtySpan = document.getElementById(`qty-${index}`);
+  let qty = parseInt(qtySpan.textContent);
+  qty += delta;
+  if(qty < 0) qty = 0;
+  qtySpan.textContent = qty;
   updateOrder();
 }
 
@@ -147,7 +143,7 @@ function updateOrder(){
   products.forEach((p,i)=>{
     let qty = parseInt(document.getElementById(`qty-${i}`).textContent);
     if(qty>0){
-      const subTotal = p.price * qty;
+      const subTotal = p.price*qty;
       order.push({name:p.name, qty, subTotal});
       const li = document.createElement("li");
       li.textContent = `${p.name} x${qty} = ${subTotal.toLocaleString()} LKR`;
@@ -159,7 +155,7 @@ function updateOrder(){
   totalPrice.textContent = `Total: ${discountedTotal.toLocaleString()} LKR`;
 }
 
-function previewReceipt(){
+window.previewReceipt = function(){
   const file = document.getElementById("receipt").files[0];
   if(file && file.type.startsWith("image/")){
     const reader = new FileReader();
@@ -168,66 +164,44 @@ function previewReceipt(){
   } else { receiptPreview.style.display = "none"; }
 }
 
-function applyPromo(){
+window.applyPromo = function(){
   const code = document.getElementById("promoCode").value.trim();
   if(code.toUpperCase() === "NIM10"){
-    discount = Math.floor(total * 0.1);
+    discount = Math.floor(total*0.1);
     alert("✅ Promo applied! 10% discount.");
   } else { discount = 0; alert("⚠️ Invalid promo code."); }
   updateOrder();
 }
 
-function clearCart(){
-  products.forEach((p,i)=>{document.getElementById(`qty-${i}`).textContent = "0";});
-  discount = 0;
-  document.getElementById("promoCode").value="";
+window.clearCart = function(){
+  products.forEach((p,i)=>document.getElementById(`qty-${i}`).textContent="0");
+  discount=0; document.getElementById("promoCode").value="";
   updateOrder();
-  receiptPreview.style.display = "none";
-  document.getElementById("receipt").value = "";
+  receiptPreview.style.display="none";
+  document.getElementById("receipt").value="";
   document.getElementById("success").style.display="none";
 }
 
-function sendOrder(){
+window.sendOrder = function(){
   const playerId = document.getElementById("playerId").value.trim();
   const receipt = document.getElementById("receipt").files[0];
-  if(!playerId){alert("⚠️ Please enter your Player ID!");return;}
-  if(order.length===0){alert("⚠️ Please select at least one package!");return;}
-  if(!receipt){alert("⚠️ Please upload your payment receipt!");return;}
+  if(!playerId){alert("⚠️ Enter Player ID!"); return;}
+  if(order.length===0){alert("⚠️ Select at least one package!"); return;}
+  if(!receipt){alert("⚠️ Upload payment receipt!"); return;}
 
-  const orderNumber = "ORD" + Date.now();
+  const orderNumber = "ORD"+Date.now();
   let orderText = order.map(o=>`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`).join("\n");
-  const message=`const message = `╔════════════════════╗
-║   💎 FREE FIRE ORDER 💎   ║
-╚════════════════════╝
 
-╔════════════════════╗
-║ Order No: ${orderNumber}       ║
-║ 👤 Player ID: ${playerId}      ║
-║ 🛒 Order:                      ║
-║ ${orderText.replace(/\n/g, '\n║ ')} ║
-║ 💰 Total: ${(total-discount).toLocaleString()} LKR ║
-║ 📎 Payment receipt attached     ║
-║ 🔗 Web Link: ${window.location.href} ║
-╚════════════════════╝
-
-╔════════════════════╗
-║        ✅ Thank you!       ║
-╚════════════════════╝`;
-
-  // PDF Creation
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF('p','mm','a4');
-  pdf.setFont("helvetica","bold");
-  pdf.setFontSize(16);
+  pdf.setFont("helvetica","bold"); pdf.setFontSize(16);
   pdf.text("💎 FREE FIRE TOP-UP ORDER 💎", 105, 20, {align:"center"});
-  pdf.setFontSize(12);
-  pdf.setFont("helvetica","normal");
+  pdf.setFontSize(12); pdf.setFont("helvetica","normal");
   pdf.text(`Order No: ${orderNumber}`, 10, 35);
   pdf.text(`Player ID: ${playerId}`, 10, 43);
   pdf.text(`Total: ${(total-discount).toLocaleString()} LKR`, 10, 51);
   pdf.text("Order Summary:", 10, 59);
-  let y=67;
-  order.forEach(o=>{pdf.text(`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`,12,y); y+=8;});
+  let y=67; order.forEach(o=>{pdf.text(`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`,12,y); y+=8;});
 
   if(receipt && receipt.type.startsWith("image/")){
     const reader = new FileReader();
@@ -240,10 +214,12 @@ function sendOrder(){
     reader.readAsDataURL(receipt);
   } else { pdf.save(`Order_${orderNumber}.pdf`); }
 
-  const waUrl="https://wa.me/94763208285?text="+encodeURIComponent(message);
+  const message = `💎 FREE FIRE ORDER 💎\nOrder No: ${orderNumber}\nPlayer ID: ${playerId}\n${orderText}\nTotal: ${(total-discount).toLocaleString()} LKR`;
+  const waUrl = "https://wa.me/94763208285?text="+encodeURIComponent(message);
   window.open(waUrl,"_blank");
   document.getElementById("success").style.display="block";
 }
+});
 </script>
 </body>
 </html>
