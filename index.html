@@ -91,20 +91,56 @@
       <h1 class="text-4xl font-extrabold tracking-tight text-blue-400 drop-shadow-[0_0_15px_rgba(63,191,244,0.35)] mt-4">BENJA LIVE STORE</h1>
       <p class="text-sm text-white/70 max-w-md mx-auto mt-2">Subscribe, Join & Follow <span class="text-blue-300 font-semibold">BENJA LIVE STORE</span> social media pages ✨</p>
 
-      <!-- Image Slideshow Banner -->
-      <div class="banner-container">
-        <img src="https://i.ibb.co/0FJf4Hp/image1.jpg" class="active" />
-        <img src="https://i.ibb.co/2d0Pz9k/image2.jpg" />
-        <img src="https://i.ibb.co/M8dLh1b/image3.jpg" />
-      </div>
+      <!-- Image Scrolling Banner -->
+<div class="scrolling-banner">
+  <img src="https://files.catbox.moe/ltbu18.jpg" />
+  <img src="https://files.catbox.moe/pjwf6m.jpg" />
+  <img src="https://files.catbox.moe/2id4to.jpg" />
+</div>
 
-      <!-- Scrolling Text / Logo Banner -->
-      <div class="text-banner-container">
-        <div class="text-banner-content">
-          🔥 Hot Deals! 💎 Top Up Offers! 🎮 New Accounts! 🛒 Shop Now! | 🔥 Hot Deals! 💎 Top Up Offers! 🎮 New Accounts! 🛒 Shop Now!
-        </div>
-      </div>
-    </div>
+<style>
+  .scrolling-banner {
+    width: 100%;
+    max-width: 800px; /* adjust size */
+    height: 300px; /* adjust height */
+    overflow: hidden;
+    position: relative;
+    margin: auto;
+  }
+
+  .scrolling-banner img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    opacity: 0;
+    transition: all 1s ease-in-out;
+  }
+
+  .scrolling-banner img.active {
+    left: 0;
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const images = document.querySelectorAll('.scrolling-banner img');
+  let current = 0;
+
+  function showNextImage() {
+    images[current].classList.remove('active');
+    current = (current + 1) % images.length;
+    images[current].classList.add('active');
+  }
+
+  // Auto scroll every 5 seconds
+  setInterval(showNextImage, 5000);
+
+  // Initialize first image
+  images[0].classList.add('active');
+</script>
+
 
     <!-- Social Buttons Grid -->
     <div class="p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
