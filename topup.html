@@ -45,7 +45,7 @@ footer{text-align:center;padding:10px;margin-top:20px;color:#00b7ff;}
 <body>
 <header></header>
 <div class="logo-area">
-  <img src="https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg" alt="NIM Logo">
+  <img src="https://files.catbox.moe/qhr7sl.jpg" alt="NIM Logo">
   <h1>BENJA TOPUP STORE</h1>
   <p>Fast • Trusted • Secure</p>
 </div>
@@ -214,7 +214,23 @@ window.sendOrder = function(){
     reader.readAsDataURL(receipt);
   } else { pdf.save(`Order_${orderNumber}.pdf`); }
 
-  const message = `💎 FREE FIRE ORDER 💎\nOrder No: ${orderNumber}\nPlayer ID: ${playerId}\n${orderText}\nTotal: ${(total-discount).toLocaleString()} LKR`;
+  const message = `╔════════════════════╗
+║   💎 FREE FIRE ORDER 💎   ║
+╚════════════════════╝
+
+╔════════════════════╗
+║ Order No: ${orderNumber}       ║
+║ 👤 Player ID: ${playerId}      ║
+║ 🛒 Order:                      ║
+║ ${orderText.replace(/\n/g, '\n║ ')} ║
+║ 💰 Total: ${(total-discount).toLocaleString()} LKR ║
+║ 📎 Payment receipt attached     ║
+║ 🔗 Web Link: ${window.location.href} ║
+╚════════════════════╝
+
+╔════════════════════╗
+║        ✅ Thank you!       ║
+╚════════════════════╝`;
   const waUrl = "https://wa.me/94763208285?text="+encodeURIComponent(message);
   window.open(waUrl,"_blank");
   document.getElementById("success").style.display="block";
