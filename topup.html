@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NIM Free Fire Top-Up Store</title>
+<title>Benja Free Fire Top-Up Store</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
@@ -36,11 +36,14 @@ header{height:220px;background:url('https://i.ibb.co/Czbc8Lv/freefire-cover.jpg'
 #promoCode{width:50%;padding:8px;margin-top:10px;border-radius:5px;border:1px solid rgba(0,153,255,0.3);background:rgba(0,0,0,0.4);color:#fff;}
 #applyPromo{padding:8px 12px;margin-left:5px;background:#00b7ff;color:#000;border:none;border-radius:5px;cursor:pointer;font-weight:bold;}
 #clearCart{padding:8px 12px;margin-top:10px;background:#ff0055;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold;}
+/* Player ID styling */
+#playerId{flex:1;padding:10px 15px;border-radius:8px;border:1px solid #00b7ff;background:rgba(0,0,0,0.4);color:#fff;font-size:16px;outline:none;transition:0.3s;}
+#playerId:focus{border-color:#00eaff;box-shadow:0 0 10px #00eaff;background:rgba(0,0,0,0.6);}
+.player-id-container{margin-top:15px;display:flex;align-items:center;gap:10px;}
 </style>
 </head>
 <body>
 <header></header>
-
 <div class="logo-area">
   <img src="https://i.ibb.co/tPw8mzct/1e6bc3f6d139fdf8.jpg" alt="NIM Logo">
   <h1>NIM TOPUP STORE</h1>
@@ -56,27 +59,34 @@ header{height:220px;background:url('https://i.ibb.co/Czbc8Lv/freefire-cover.jpg'
   <div class="card">
     <h2>📋 Your Order</h2>
     <div class="order-summary" id="orderSummary">
-      <label><b>Player ID:</b></label>
-      <input type="text" id="playerId" placeholder="Enter your Free Fire ID">
+      
+      <!-- Player ID Input -->
+      <div class="player-id-container">
+        <span>👤</span>
+        <input type="text" id="playerId" placeholder="Enter your Free Fire ID">
+      </div>
 
-      <label><b>Upload Payment Receipt (PDF/Image):</b></label>
+      <!-- File Upload -->
+      <label style="margin-top:15px;display:block;"><b>Upload Payment Receipt (PDF/Image):</b></label>
       <div class="file-upload" onclick="document.getElementById('receipt').click()">
         <span>📎 Choose File</span>
         <input type="file" id="receipt" accept="image/*,.pdf" onchange="previewReceipt()">
       </div>
       <img id="receiptPreview" src="" alt="" style="display:none;"/>
 
+      <!-- Order Details -->
       <h3 style="margin-top:15px;color:#00eaff;">Order Details:</h3>
       <ul id="orderList" style="list-style:none;margin-top:10px;padding-left:0;"></ul>
       <p id="totalPrice" style="text-align:right;font-weight:bold;font-size:16px;margin-top:10px;">Total: 0 LKR</p>
 
+      <!-- Promo & Clear -->
       <div>
         <input type="text" id="promoCode" placeholder="Enter Promo Code">
         <button id="applyPromo" onclick="applyPromo()">Apply</button>
       </div>
-
       <button id="clearCart" onclick="clearCart()">Clear Cart</button>
 
+      <!-- WhatsApp Button -->
       <button class="whatsapp-btn" onclick="sendOrder()">🚀 Send Order via WhatsApp</button>
 
       <div id="success" class="success-message">
@@ -107,7 +117,7 @@ const totalPrice = document.getElementById("totalPrice");
 const receiptPreview = document.getElementById("receiptPreview");
 let order = [], total = 0, discount = 0;
 
-// Create product cards with + and - buttons
+// Create product cards
 products.forEach((p,i)=>{
   let item = document.createElement("div");
   item.className = "item";
@@ -161,7 +171,7 @@ function previewReceipt(){
 function applyPromo(){
   const code = document.getElementById("promoCode").value.trim();
   if(code.toUpperCase() === "NIM10"){
-    discount = Math.floor(total * 0.1); // 10% discount
+    discount = Math.floor(total * 0.1);
     alert("✅ Promo applied! 10% discount.");
   } else { discount = 0; alert("⚠️ Invalid promo code."); }
   updateOrder();
@@ -188,34 +198,33 @@ function sendOrder(){
   let orderText = order.map(o=>`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`).join("\n");
   const message=`💎 FREE FIRE ORDER 💎\nOrder No: ${orderNumber}\n👤 Player ID: ${playerId}\n🛒 Order:\n${orderText}\n💰 Total: ${(total-discount).toLocaleString()} LKR\n📎 Payment receipt attached\n🔗 Web Link: ${window.location.href}\n✅ Thank you!`;
 
+  // PDF Creation
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-  pdf.setFontSize(14);
-  pdf.text("📝 Payment Details", 10, 20);
+  const pdf = new jsPDF('p','mm','a4');
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(16);
+  pdf.text("💎 FREE FIRE TOP-UP ORDER 💎", 105, 20, {align:"center"});
   pdf.setFontSize(12);
-  pdf.text(`Order No: ${orderNumber}`, 10, 30);
-  pdf.text(`Player ID: ${playerId}`, 10, 38);
-  pdf.text(`Total: ${(total-discount).toLocaleString()} LKR`, 10, 46);
-  pdf.text("Order Summary:", 10, 54);
-  let y=62;
+  pdf.setFont("helvetica","normal");
+  pdf.text(`Order No: ${orderNumber}`, 10, 35);
+  pdf.text(`Player ID: ${playerId}`, 10, 43);
+  pdf.text(`Total: ${(total-discount).toLocaleString()} LKR`, 10, 51);
+  pdf.text("Order Summary:", 10, 59);
+  let y=67;
   order.forEach(o=>{pdf.text(`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`,12,y); y+=8;});
 
-  // Embed image receipt if available
   if(receipt && receipt.type.startsWith("image/")){
     const reader = new FileReader();
-    reader.onload = e => {
-      const imgData = e.target.result;
+    reader.onload = e=>{
       pdf.addPage();
       pdf.text("📎 Payment Receipt", 10, 20);
-      pdf.addImage(imgData,'JPEG',10,30,180,160);
+      pdf.addImage(e.target.result,'JPEG',10,30,180,160);
       pdf.save(`Order_${orderNumber}.pdf`);
     };
     reader.readAsDataURL(receipt);
-  } else {
-    pdf.save(`Order_${orderNumber}.pdf`);
-  }
+  } else { pdf.save(`Order_${orderNumber}.pdf`); }
 
-  const waUrl="https://wa.me/94763208285?text="+encodeURIComponent(message);
+  const waUrl="https://wa.me/94784280074?text="+encodeURIComponent(message);
   window.open(waUrl,"_blank");
   document.getElementById("success").style.display="block";
 }
