@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NIM Free Fire Top-Up Store</title>
+<title>Benja Free Fire Top-Up Store</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
@@ -29,13 +29,6 @@ input[type="number"], input[type="text"]{width:100%;padding:10px;margin-top:8px;
 .whatsapp-btn:hover{background-color:#009eff;box-shadow:0 0 25px rgba(0,153,255,0.6);}
 .order-summary{margin-top:20px;background:rgba(0,0,0,0.3);border-radius:10px;padding:20px;border:1px solid rgba(0,153,255,0.3);}
 .success-message{display:none;background:rgba(0,255,0,0.05);border-left:5px solid #00ffb0;text-align:center;padding:15px;margin-top:20px;color:#00ffb0;}
-.bank-section{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;}
-.bank-box{background:rgba(255,255,255,0.05);padding:15px;border-radius:10px;border-left:3px solid #00aaff;}
-.bank-box b{color:#00b7ff;}
-footer{text-align:center;color:#8bbaff;font-size:13px;margin:40px 0;}
-.payment-methods{display:flex;gap:15px;margin-top:15px;}
-.payment-methods button{flex:1;padding:10px;border-radius:8px;border:none;cursor:pointer;font-weight:bold;transition:0.3s;}
-.payment-methods button.active{background:#00b7ff;color:#000;}
 </style>
 </head>
 <body>
@@ -55,7 +48,7 @@ footer{text-align:center;color:#8bbaff;font-size:13px;margin:40px 0;}
 
   <div class="card">
     <h2>📋 Your Order</h2>
-    <div class="order-summary">
+    <div class="order-summary" id="orderSummary">
       <label><b>Player ID:</b></label>
       <input type="text" id="playerId" placeholder="Enter your Free Fire ID">
 
@@ -65,11 +58,9 @@ footer{text-align:center;color:#8bbaff;font-size:13px;margin:40px 0;}
         <input type="file" id="receipt" accept="image/*,.pdf">
       </div>
 
-      <div class="payment-methods">
-        <button id="bankBtn" class="active" onclick="selectPayment('Bank')">Bank</button>
-        <button id="ezBtn" onclick="selectPayment('EZ Cash')">EZ Cash</button>
-        <button id="cardBtn" onclick="selectPayment('Card')">Card</button>
-      </div>
+      <h3 style="margin-top:15px;color:#00eaff;">Order Details:</h3>
+      <ul id="orderList" style="list-style:none;margin-top:10px;padding-left:0;"></ul>
+      <p id="totalPrice" style="text-align:right;font-weight:bold;font-size:16px;margin-top:10px;">Total: 0 LKR</p>
 
       <button class="whatsapp-btn" onclick="sendOrder()">🚀 Send Order via WhatsApp</button>
 
@@ -79,22 +70,6 @@ footer{text-align:center;color:#8bbaff;font-size:13px;margin:40px 0;}
         🙏 Thank You ❤️
       </div>
     </div>
-  </div>
-
-  <div class="card">
-    <h2>💰 Payment Details</h2>
-    <div class="bank-section">
-      <div class="bank-box">
-        <p>🏦 <b>Bank - NSB</b><br>Account: 109090193739<br>Name: G.M.N.N.JAYASURIYA<br>Branch: Ampara 2nd</p>
-      </div>
-      <div class="bank-box">
-        <p>🏦 <b>Bank - Dialog Finance PLC</b><br>Account: 001021434294<br>Name: Gardiya M. Nethmintha Nimsara J.<br>Branch: Head Office</p>
-      </div>
-      <div class="bank-box">
-        <p>🏦 <b>Bank - Peoples Bank</b><br>Account: 015200130082418<br>Name: Nethmintha Nimsara<br>Branch: Ampara</p>
-      </div>
-    </div>
-    <p style="margin-top:15px;">🪄 <b>EZ Cash:</b> 0740532742<br>⚠️ Add Rs.20 extra for EZ Cash payments.</p>
   </div>
 </div>
 
@@ -110,8 +85,11 @@ const products = [
   {name:"520 Diamonds",price:1360,img:"https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg"},
   {name:"1080 Diamonds",price:2880,img:"https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg"}
 ];
+
 const packageContainer=document.getElementById("packages");
-let order=[]; let total=0; let selectedPayment="Bank";
+const orderList=document.getElementById("orderList");
+const totalPrice=document.getElementById("totalPrice");
+let order=[]; let total=0;
 
 products.forEach((p,i)=>{
   let item=document.createElement("div");
@@ -121,21 +99,19 @@ products.forEach((p,i)=>{
 });
 
 function updateOrder(){
-  order=[]; total=0;
+  order=[]; total=0; orderList.innerHTML="";
   products.forEach((p,i)=>{
-    let qty=parseInt(document.getElementById(`qty-${i}`).value)||0;
-    if(qty>0){order.push(`${p.name} x${qty} = ${(p.price*qty).toLocaleString()} LKR`); total+=p.price*qty;}
+    const qty=parseInt(document.getElementById(`qty-${i}`).value)||0;
+    if(qty>0){
+      const subTotal = p.price * qty;
+      order.push({name:p.name,qty,subTotal});
+      const li=document.createElement("li");
+      li.textContent=`${p.name} x${qty} = ${subTotal.toLocaleString()} LKR`;
+      orderList.appendChild(li);
+      total += subTotal;
+    }
   });
-}
-
-function selectPayment(method){
-  selectedPayment=method;
-  document.getElementById("bankBtn").classList.remove("active");
-  document.getElementById("ezBtn").classList.remove("active");
-  document.getElementById("cardBtn").classList.remove("active");
-  if(method==="Bank") document.getElementById("bankBtn").classList.add("active");
-  if(method==="EZ Cash") document.getElementById("ezBtn").classList.add("active");
-  if(method==="Card") document.getElementById("cardBtn").classList.add("active");
+  totalPrice.textContent=`Total: ${total.toLocaleString()} LKR`;
 }
 
 function sendOrder(){
@@ -144,11 +120,11 @@ function sendOrder(){
   if(!playerId){alert("⚠️ Please enter your Player ID!");return;}
   if(order.length===0){alert("⚠️ Please select at least one package!");return;}
   if(!receipt){alert("⚠️ Please upload your payment receipt!");return;}
-  
-  const orderNumber="ORD"+Date.now();
-  const message=`💎 FREE FIRE ORDER 💎\nOrder No: ${orderNumber}\n👤 Player ID: ${playerId}\n🛒 Order:\n${order.join("\n")}\n💰 Total: ${total.toLocaleString()} LKR\n💳 Payment Method: ${selectedPayment}\n📎 Payment receipt attached\n🔗 Web Link: ${window.location.href}\n✅ Thank you!`;
 
-  // Generate PDF with payment status
+  const orderNumber="ORD"+Date.now();
+  let orderText = order.map(o=>`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`).join("\n");
+  const message=`💎 FREE FIRE ORDER 💎\nOrder No: ${orderNumber}\n👤 Player ID: ${playerId}\n🛒 Order:\n${orderText}\n💰 Total: ${total.toLocaleString()} LKR\n📎 Payment receipt attached\n🔗 Web Link: ${window.location.href}\n✅ Thank you!`;
+
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF();
   pdf.setFontSize(14);
@@ -156,11 +132,10 @@ function sendOrder(){
   pdf.setFontSize(12);
   pdf.text(`Order No: ${orderNumber}`, 10, 30);
   pdf.text(`Player ID: ${playerId}`, 10, 38);
-  pdf.text(`Payment Method: ${selectedPayment}`, 10, 46);
-  pdf.text(`Total: ${total.toLocaleString()} LKR`, 10, 54);
-  pdf.text("Order Summary:", 10, 62);
-  let y = 70;
-  order.forEach(o=>{pdf.text(o, 12, y); y+=8;});
+  pdf.text(`Total: ${total.toLocaleString()} LKR`, 10, 46);
+  pdf.text("Order Summary:", 10, 54);
+  let y=62;
+  order.forEach(o=>{pdf.text(`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`,12,y); y+=8;});
   pdf.save(`Order_${orderNumber}.pdf`);
 
   const waUrl="https://wa.me/94784280074?text="+encodeURIComponent(message);
