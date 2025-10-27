@@ -50,6 +50,7 @@ body.dark .bank-box{background:#f7f7f7; border-left:4px solid #00b7ff;}
 <header></header>
 
 <div class="logo-area">
+  <!-- Profile Picture (Game Logo) -->
   <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Freefire_logo.png" alt="NIM Logo">
   <h1>NIM TOPUP STORE</h1>
   <p>Fast • Trusted • Secure</p>
@@ -59,13 +60,13 @@ body.dark .bank-box{background:#f7f7f7; border-left:4px solid #00b7ff;}
 
   <!-- Membership Packages -->
   <div class="card">
-    <h2><img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Freefire_logo.png" style="width:24px; vertical-align:middle;"> Select Your Package</h2>
+    <h2>Select Membership Package</h2>
     <div class="packages" id="packages"></div>
   </div>
 
   <!-- Gem Store -->
   <div class="card">
-    <h2><img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Freefire_logo.png" style="width:24px; vertical-align:middle;"> Gem Store</h2>
+    <h2>Gem Store</h2>
     <div class="packages" id="gem-packages"></div>
   </div>
 
@@ -123,18 +124,20 @@ body.dark .bank-box{background:#f7f7f7; border-left:4px solid #00b7ff;}
 </footer>
 
 <script>
+// Packages
 const products = [
   { name: "Weekly Lite Membership", price: 120, img: "https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg", stock:10 },
   { name: "Weekly Membership", price: 480, img: "https://i.ibb.co/XxPzttVP/af85c42caad4127d.jpg", stock:10 },
   { name: "Monthly Membership", price: 2300, img: "https://i.ibb.co/m5HtMtfJ/64dbaeaedb021e55.jpg", stock:10 }
 ];
+
 const gemProducts = [
   { name: "100 Gems", price: 300, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg", stock:10 },
   { name: "520 Gems", price: 1500, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg", stock:10 },
   { name: "1080 Gems", price: 3000, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg", stock:10 }
 ];
 
-let order=[], gemOrder=[], total=0;
+let order=[], total=0;
 const packageContainer=document.getElementById("packages");
 const gemContainer=document.getElementById("gem-packages");
 const orderList=document.getElementById("order-list");
@@ -154,4 +157,84 @@ products.forEach((p,i)=>{
 gemProducts.forEach((p,i)=>{
   let item=document.createElement("div");
   item.className="item";
-  item.innerHTML=`<img src="${p.img}" alt="${p.name}"><p>${p
+  item.innerHTML=`<img src="${p.img}" alt="${p.name}"><p>${p.name}</p><p class="price" id="gprice-${i}">${p.price.toLocaleString()} LKR</p><input type="number" id="gqty-${i}" value="0" min="0" max="${p.stock}" onchange="updateOrder()">`;
+  gemContainer.appendChild(item);
+});
+
+// Update order
+function updateOrder(){
+  order=[];
+  total=0;
+  products.forEach((p,i)=>{
+    let qty=parseInt(document.getElementById(`qty-${i}`).value)||0;
+    if(qty>0){ order.push(`${p.name} x${qty} = ${(p.price*qty).toLocaleString()} LKR`); total+=p.price*qty;}
+    document.getElementById(`price-${i}`).textContent=`${(p.price*qty||p.price).toLocaleString()} LKR`;
+  });
+  gemProducts.forEach((p,i)=>{
+    let qty=parseInt(document.getElementById(`gqty-${i}`).value)||0;
+    if(qty>0){ order.push(`${p.name} x${qty} = ${(p.price*qty).toLocaleString()} LKR`); total+=p.price*qty;}
+    document.getElementById(`gprice-${i}`).textContent=`${(p.price*qty||p.price).toLocaleString()} LKR`;
+  });
+  applyPromo();
+  orderList.innerHTML=order.join("<br>");
+  itemsEl.textContent=order.length;
+}
+
+// Promo code
+function applyPromo(){
+  const code=document.getElementById("promo-code").value.trim();
+  let finalTotal=total;
+  if(code==="FREE50") finalTotal-=50;
+  const method = document.getElementById("payment-method").value;
+  if(method==="ezcash") finalTotal+=20;
+  totalEl.textContent=finalTotal.toLocaleString();
+}
+
+// Payment method change
+function updateTotal(){applyPromo();}
+
+// Dark/Light theme
+function toggleTheme(){
+  document.body.classList.toggle("dark");
+}
+
+// Copy message
+function copyMessage(){
+  const playerId=document.getElementById("playerId").value.trim();
+  if(!playerId || order.length===0){return alert("Please enter Player ID and select packages!");}
+  let message=`FREE FIRE ORDER\nPlayer ID: ${playerId}\nOrder:\n${order.join("\n")}\nTotal: ${totalEl.textContent} LKR`;
+  navigator.clipboard.writeText(message).then(()=> alert("Order message copied!"));
+}
+
+// PDF + WhatsApp
+async function sendOrder(){
+  const { jsPDF } = window.jspdf;
+  const playerId=document.getElementById("playerId").value.trim();
+  const receiptFiles=document.getElementById("receipt").files;
+  if(!playerId) return alert("Enter Player ID!");
+  if(order.length===0) return alert("Select at least one package!");
+  if(receiptFiles.length===0) return alert("Upload at least one receipt!");
+  const pdf=new jsPDF();
+  pdf.setFontSize(18); pdf.setTextColor(0,0,255);
+  pdf.text("FREE FIRE ORDER",105,20,null,null,"center");
+  pdf.setFontSize(12); pdf.setTextColor(0,0,0);
+  pdf.text(`Player ID: ${playerId}`,20,40);
+  let y=50;
+  order.forEach(item=>{pdf.text(item,20,y); y+=10;});
+  pdf.text(`Total: ${totalEl.textContent} LKR`,20,y+10);
+  // Add receipts images
+  for(let i=0;i<receiptFiles.length;i++){
+    if(receiptFiles[i].type.startsWith("image/")){
+      const reader=new FileReader();
+      reader.onload=function(e){ pdf.addImage(e.target.result,'PNG',20,y+20,150,100); pdf.save("Order.pdf"); }
+      reader.readAsDataURL(receiptFiles[i]);
+    }
+  }
+  // WhatsApp message
+  let msg=`FREE FIRE ORDER\nPlayer ID: ${playerId}\nOrder:\n${order.join("\n")}\nTotal: ${totalEl.textContent} LKR`;
+  window.open(`https://wa.me/94784280074?text=${encodeURIComponent(msg)}`,"_blank");
+  successMsg.style.display="block"; successMsg.textContent="✅ Order prepared! Check WhatsApp.";
+}
+</script>
+</body>
+</html>
