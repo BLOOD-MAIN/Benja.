@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NIM Free Fire Top-Up Store</title>
+<title>NIM Free Fire Top-Up & Gem Store</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Poppins',sans-serif;background:#0a0e17;color:#fff;overflow-x:hidden;transition:0.3s;}
@@ -33,7 +32,7 @@ filter:brightness(0.4) blur(1px);border-bottom:3px solid rgba(0,153,255,0.4);}
 .item .price{color:#00eaff;font-weight:bold;margin-bottom:8px;}
 input[type="number"], input[type="text"], select{width:100%; padding:12px; margin-top:10px; background: rgba(0,0,0,0.45); color:white; border:1px solid rgba(0,153,255,0.3); border-radius:6px; text-align:center; transition:0.3s;}
 input[type="number"]:focus,input[type="text"]:focus,select:focus{outline:none;border-color:#00dfff;background: rgba(0,0,0,0.55);}
-.whatsapp-btn{background:linear-gradient(90deg,#00b7ff,#0078ff); color:#fff; padding:14px; border:none; border-radius:10px; font-weight:bold; font-size:16px; width:100%; cursor:pointer; transition:0.4s; box-shadow:0 0 20px rgba(0,153,255,0.4);}
+.whatsapp-btn{background:linear-gradient(90deg,#00b7ff,#0078ff); color:#fff; padding:14px; border:none; border-radius:10px; font-weight:bold; font-size:16px; width:100%; cursor:pointer; transition:0.4s; box-shadow:0 0 20px rgba(0,153,255,0.4); margin-top:10px;}
 .whatsapp-btn:hover{background:linear-gradient(90deg,#0078ff,#00d7ff); box-shadow:0 0 30px rgba(0,153,255,0.7);}
 .order-summary{margin-top:20px; background: rgba(0,0,0,0.35); border-radius:12px; padding:25px; border:1px solid rgba(0,153,255,0.35);}
 .success-message{display:none;background: rgba(0,255,0,0.08); border-left:5px solid #00ffb0; text-align:center; padding:15px; margin-top:20px; color:#00ffb0; font-weight:bold;}
@@ -51,7 +50,6 @@ body.dark .bank-box{background:#f7f7f7; border-left:4px solid #00b7ff;}
 <header></header>
 
 <div class="logo-area">
-  <!-- Free Fire real logo -->
   <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Freefire_logo.png" alt="NIM Logo">
   <h1>NIM TOPUP STORE</h1>
   <p>Fast • Trusted • Secure</p>
@@ -59,10 +57,16 @@ body.dark .bank-box{background:#f7f7f7; border-left:4px solid #00b7ff;}
 
 <div class="container">
 
-  <!-- Packages -->
+  <!-- Membership Packages -->
   <div class="card">
     <h2><img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Freefire_logo.png" style="width:24px; vertical-align:middle;"> Select Your Package</h2>
     <div class="packages" id="packages"></div>
+  </div>
+
+  <!-- Gem Store -->
+  <div class="card">
+    <h2><img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Freefire_logo.png" style="width:24px; vertical-align:middle;"> Gem Store</h2>
+    <div class="packages" id="gem-packages"></div>
   </div>
 
   <!-- Order Section -->
@@ -77,19 +81,18 @@ body.dark .bank-box{background:#f7f7f7; border-left:4px solid #00b7ff;}
 
       <label><b>Payment Method:</b></label>
       <select id="payment-method" onchange="updateTotal()">
-        <option value="bank">Bank <img src="https://cdn-icons-png.flaticon.com/512/34/34627.png" style="width:16px; vertical-align:middle;"></option>
-        <option value="ezcash">EZ Cash (+20 LKR) <img src="https://cdn-icons-png.flaticon.com/512/25/25432.png" style="width:16px; vertical-align:middle;"></option>
+        <option value="bank">Bank</option>
+        <option value="ezcash">EZ Cash (+20 LKR)</option>
       </select>
 
       <label><b>Promo Code:</b></label>
       <input type="text" id="promo-code" placeholder="Enter code" oninput="applyPromo()">
 
-      <button class="whatsapp-btn mt-3" onclick="sendOrder()">Send Order via WhatsApp</button>
-      <button class="whatsapp-btn mt-3" onclick="copyMessage()">Copy Order Message</button>
-      <button class="whatsapp-btn mt-3" onclick="toggleTheme()">Toggle Theme</button>
+      <button class="whatsapp-btn" onclick="sendOrder()">Send Order via WhatsApp</button>
+      <button class="whatsapp-btn" onclick="copyMessage()">Copy Order Message</button>
+      <button class="whatsapp-btn" onclick="toggleTheme()">Toggle Theme</button>
 
       <div id="success" class="success-message"></div>
-
       <div id="order-list" style="margin-top:15px;"></div>
       <p><b>Items Selected:</b> <span id="items">0</span></p>
       <p><b>Total:</b> <span id="total">0</span> LKR</p>
@@ -101,10 +104,54 @@ body.dark .bank-box{background:#f7f7f7; border-left:4px solid #00b7ff;}
     <h2>Payment Details</h2>
     <div class="bank-section">
       <div class="bank-box">
-        <p><img src="https://cdn-icons-png.flaticon.com/512/34/34627.png" style="width:16px;"> <b>Bank - NSB</b><br>Account: 109090193739<br>Name: G.M.N.N.JAYASURIYA<br>Branch: Ampara 2nd</p>
+        <p><b>Bank - NSB</b><br>Account: 109090193739<br>Name: G.M.N.N.JAYASURIYA<br>Branch: Ampara 2nd</p>
       </div>
       <div class="bank-box">
-        <p><img src="https://cdn-icons-png.flaticon.com/512/34/34627.png" style="width:16px;"> <b>Bank - Dialog Finance PLC</b><br>Account: 001021434294<br>Name: Gardiya M. Nethmintha Nimsara J.<br>Branch: Head Office</p>
+        <p><b>Bank - Dialog Finance PLC</b><br>Account: 001021434294<br>Name: Gardiya M. Nethmintha Nimsara J.<br>Branch: Head Office</p>
       </div>
       <div class="bank-box">
-        <p><img src="https://cdn-icons-png.flaticon.com/512/34/34627.png" style="width:16px;"> <b>Bank - Peoples Bank</b><br>Account: 015200130082418<br>Name: Nethmintha Nimsara<br>Branch: Ampara</
+        <p><b>Bank - Peoples Bank</b><br>Account: 015200130082418<br>Name: Nethmintha Nimsara<br>Branch: Ampara</p>
+      </div>
+    </div>
+    <p style="margin-top:15px;">EZ Cash: 0740532742 (Add Rs.20 extra)</p>
+  </div>
+
+</div>
+
+<footer>
+  © 2025 NIM TopUp Store | All Rights Reserved
+</footer>
+
+<script>
+const products = [
+  { name: "Weekly Lite Membership", price: 120, img: "https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg", stock:10 },
+  { name: "Weekly Membership", price: 480, img: "https://i.ibb.co/XxPzttVP/af85c42caad4127d.jpg", stock:10 },
+  { name: "Monthly Membership", price: 2300, img: "https://i.ibb.co/m5HtMtfJ/64dbaeaedb021e55.jpg", stock:10 }
+];
+const gemProducts = [
+  { name: "100 Gems", price: 300, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg", stock:10 },
+  { name: "520 Gems", price: 1500, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg", stock:10 },
+  { name: "1080 Gems", price: 3000, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg", stock:10 }
+];
+
+let order=[], gemOrder=[], total=0;
+const packageContainer=document.getElementById("packages");
+const gemContainer=document.getElementById("gem-packages");
+const orderList=document.getElementById("order-list");
+const itemsEl=document.getElementById("items");
+const totalEl=document.getElementById("total");
+const successMsg=document.getElementById("success");
+
+// Render membership packages
+products.forEach((p,i)=>{
+  let item=document.createElement("div");
+  item.className="item";
+  item.innerHTML=`<img src="${p.img}" alt="${p.name}"><p>${p.name}</p><p class="price" id="price-${i}">${p.price.toLocaleString()} LKR</p><input type="number" id="qty-${i}" value="0" min="0" max="${p.stock}" onchange="updateOrder()">`;
+  packageContainer.appendChild(item);
+});
+
+// Render gem packages
+gemProducts.forEach((p,i)=>{
+  let item=document.createElement("div");
+  item.className="item";
+  item.innerHTML=`<img src="${p.img}" alt="${p.name}"><p>${p
