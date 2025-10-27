@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIM TopUp Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0d0d2b, #1a1a40);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(90deg, red, rgb(214, 3, 56));
+      color: #fff;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .container {
+      padding: 15px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #00eaff;
+
+}
+    h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #e0dd04;
+
+    }
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 0px 20px red, 0px 0px 20px blue;
+    }
+    .card img {
+      width: 100px;
+      height: auto;
+    }
+    .price {
+      color: #0ff;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    input[type="number"] {
+      width: 50px;
+      text-align: center;
+      margin-top: 5px;
+    }
+    .order-summary {
+      margin-top: 25px;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 10px;
+    }
+    .order-summary h3 {
+      margin-bottom: 10px;
+      color: #ffd700;
+    }
+    .payment-details {
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.596);
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .whatsapp-btn {
+      background: green;
+      color: white;
+      padding: 12px;
+      border: none;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 18px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    .success-message {
+      margin-top: 20px;
+      padding: 15px;
+      background: #222;
+      border-left: 5px solid limegreen;
+      display: none;
+      text-align: center;
+    }
+
+
+  
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(270deg, #0d47a1, #b71c1c);
+      background-size: 400% 400%;
+      animation: gradientBG 8s ease infinite;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+    }
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.6);
+    }
+    header img { max-width: 150px; border-radius: 12px; }
+    h1 { margin: 10px 0; }
+    .container { padding: 20px; }
+
+
+
+
+
+    .download-btn {
+      background-color: #01d8e7;
+      color: #000;
+      padding: 10px 200px;
+      border: black;
+      border-radius: 10px;
+      text-decoration: rgb(214, 121, 0);
+      font-weight: bold;
+      transition: background 0.8s;
+
+
+    }
+
+
+
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://i.ibb.co/tPw8mzct/1e6bc3f6d139fdf8.jpg" alt="NIM TOPUP STORE Logo">
+    <h1>NIM TOPUP STORE</h1>
+    <p>Fast • Trusted • Secure</p>
+  </header>
+
+
+
+    <h2>💎 Select Your Package</h2>
+
+    <div class="packages" id="packages">
+      <!-- Packages dynamically inserted -->
+    </div>
+
+
+ <div class="payment-details">
+      <h3>💰 Payment Details</h3>
+      <p>💡 <b>Bank - NSB</b><br>
+         Account: 109090193739<br>
+         Name: G.M.N.N.JAYASURIYA<br>
+         Branch: Ampara 2nd</p>
+
+      <p>💡 <b>Bank - Dialog Finance PLC</b><br>
+         Account: 001021434294<br>
+         Name: Gardiya M. Nethmintha Nimsara J.<br>
+         Branch: Head Office</p>
+
+      <p>💡 <b>Bank - Peoples Bank</b><br>
+         Account: 015200130082418<br>
+         Name: Nethmintha Nimsara<br>
+         Branch: Ampara</p>
+
+      <p>🪄 <b>EZ Cash:</b> 0740532742<br>
+         ⚠️ Add extra Rs.20 when paying via EZ Cash</p><br><br>
+    
+    <strong>මුදල් ගෙවීමෙන් පසු එහි රිසිට් පත Whatsapp මගින් යොමු කරන්න ❗</strong><br>
+(auto payment option comming soon)</p>
+    </div>
+
+
+
+
+    <div class="order-summary">
+      <h3>Step 3 — Your Order</h3>
+      <p><strong>Player ID:</strong> <input type="text" id="playerId" placeholder="Enter your ID"></p>
+      <div id="order-list"></div>
+      <p><strong>Items:</strong> <span id="items">0</span></p>
+      <p><strong>Total:</strong> <span id="total">0</span> LKR</p>
+
+      <p><strong>Upload Payment Receipt:</strong></p>
+      <input type="file" id="receipt" accept="image/*">
+
+      <button class="whatsapp-btn" onclick="sendOrder()">🚀 Proceed to WhatsApp</button>
+    </div>
+
+<div id="success" class="success-message">
+      ✅ Order Successfully Sent!<br>
+      ⏳ Please wait 10 minutes...<br>
+      🙏 Thank You ❤️
+    </div>
+  </div>
+
+
+  
+  
+
+  <div class="container">
+    <section id="home">
+      <div class="app-grid">
+        <div class="app-card"><br>
+          <h1>👇🏻 NIM LIVE SITE 👇🏻</h1>
+          <p>My Social Profiles.</p>
+          <a href="https://nim-live.vercel.app/" class="download-btn">Click</a><br><br>
+
+          <h3>Thankyou 💖</h3>
+        </div>
+
+      
+    
+
+<script>
+  const products = [
+    { name: "Weekly Lite Membership", price: 120, img: "https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg" },
+    { name: "Weekly Membership", price: 480, img: "https://i.ibb.co/XxPzttVP/af85c42caad4127d.jpg" },
+    { name: "Monthly Membership", price: 2300, img: "https://i.ibb.co/m5HtMtfJ/64dbaeaedb021e55.jpg" },
+    { name: "3 Day EVO Access", price: 185, img: "https://i.ibb.co/k6SSr6Jx/d4e707dfdd7abefc.jpg" },
+    { name: "7 Day EVO Access", price: 260, img: "https://i.ibb.co/KxL0W41Q/670502c326f6772b.jpg" },
+    { name: "30 Day EVO Access", price: 750, img: "https://i.ibb.co/9kKnZDbk/069f9f8d71020dab.jpg" },
+    { name: "25 Diamonds", price: 70, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg" },
+    { name: "100 Diamonds", price: 270, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg" },
+    { name: "310 Diamonds", price: 820, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg" },
+    { name: "520 Diamonds", price: 1360, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg" },
+    { name: "1080 Diamonds", price: 2880, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg" },
+    { name: "2180 Diamonds", price: 5400, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg" },
+    { name: "5600 Diamonds", price: 13400, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg" },
+    { name: "11500 Diamonds", price: 27550, img: "https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg" }
+  ];
+
+  const packageContainer = document.getElementById("packages");
+  const orderList = document.getElementById("order-list");
+  const itemsEl = document.getElementById("items");
+  const totalEl = document.getElementById("total");
+  const successMsg = document.getElementById("success");
+
+  let order = [];
+  let total = 0;
+
+  products.forEach((p, i) => {
+    let card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.name}">
+      <p>${p.name}</p>
+      <p class="price">${p.price.toLocaleString()} LKR</p>
+      <input type="number" id="qty-${i}" value="0" min="0" onchange="updateOrder()">
+    `;
+    packageContainer.appendChild(card);
+  });
+
+  function updateOrder() {
+    order = [];
+    total = 0;
+    products.forEach((p, i) => {
+      let qty = parseInt(document.getElementById(`qty-${i}`).value) || 0;
+      if (qty > 0) {
+        order.push(`${p.name} x${qty} = ${(p.price * qty).toLocaleString()} LKR`);
+        total += p.price * qty;
+      }
+    });
+    orderList.innerHTML = order.join("<br>");
+    itemsEl.textContent = order.length;
+    totalEl.textContent = total.toLocaleString();
+  }
+
+  function sendOrder() {
+    let playerId = document.getElementById("playerId").value;
+    let receipt = document.getElementById("receipt").files[0];
+
+    if (!playerId) { alert("Please enter your Player ID!"); return; }
+    if (order.length === 0) { alert("Please select at least one package!"); return; }
+    if (!receipt) { alert("Please upload your payment receipt image!"); return; }
+
+    let message = `🔥 NIM TOPUP ORDER 🔥\n\n👤 Player ID: ${playerId}\n🛒 Order:\n${order.join("\n")}\n\n💰 Total: ${total.toLocaleString()} LKR\n\n📌 Please reply with your payment receipt.\n✅ Thank you!`;
+
+    let url = `https://wa.me/94784280074?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+
+    successMsg.style.display = "block";
+  }
+
+        
+        
+
+</script>
+</body>
+</html>
