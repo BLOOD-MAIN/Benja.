@@ -4,237 +4,63 @@
   <meta charset="UTF-8">
   <title>NIM Free Fire Top-Up Store</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Tailwind optional -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jsPDF CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #0a0e17;
-      color: #fff;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* 🔵 Animated Blue Dots Background */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Poppins', sans-serif; background:#0a0e17; color:#fff; overflow-x:hidden; }
     body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: radial-gradient(circle at random, rgba(0,153,255,0.2) 2px, transparent 2px);
-      background-size: 60px 60px;
-      filter: blur(3px);
-      animation: moveDots 10s linear infinite;
-      z-index: -2;
+      content:""; position:fixed; top:0; left:0; width:100%; height:100%;
+      background: radial-gradient(circle, rgba(0,153,255,0.2) 2px, transparent 2px);
+      background-size: 60px 60px; filter:blur(3px);
+      animation:moveDots 10s linear infinite; z-index:-2;
     }
+    @keyframes moveDots { 0%{background-position:0 0;}100%{background-position:200px 200px;} }
 
-    @keyframes moveDots {
-      0% { background-position: 0 0; }
-      100% { background-position: 200px 200px; }
-    }
-
-    /* HEADER + COVER */
     header {
-      position: relative;
-      height: 220px;
-      background: url('https://i.ibb.co/Czbc8Lv/freefire-cover.jpg') center/cover no-repeat;
-      filter: brightness(0.35) blur(1px); /* Hina + dreamy look */
-      border-bottom: 2px solid rgba(0,153,255,0.4);
+      height:220px;
+      background:url('https://i.ibb.co/Czbc8Lv/freefire-cover.jpg') center/cover no-repeat;
+      filter:brightness(0.35) blur(1px);
+      border-bottom:2px solid rgba(0,153,255,0.4);
     }
 
-    /* LOGO + TITLE AREA */
-    .logo-area {
-      position: relative;
-      text-align: center;
-      margin-top: -60px;
-    }
+    .logo-area { text-align:center; margin-top:-60px; }
+    .logo-area img { width:120px; border-radius:50%; border:3px solid #00aaff; box-shadow:0 0 25px #00aaff; background:#0f1218; }
+    .logo-area h1 { font-size:28px; color:#00b7ff; margin-top:10px; text-shadow:0 0 15px #009dff; }
+    .logo-area p { font-size:14px; color:#a0caff; margin-top:4px; }
 
-    .logo-area img {
-      width: 120px;
-      border-radius: 50%;
-      border: 3px solid #00aaff;
-      box-shadow: 0 0 25px #00aaff;
-      background: #0f1218;
-    }
+    .container { max-width:950px; margin:20px auto; padding:20px; }
+    .card { background: rgba(17,22,33,0.85); border-radius:12px; padding:20px; margin-bottom:20px; border:1px solid rgba(0,153,255,0.3); box-shadow:0 0 20px rgba(0,153,255,0.1); backdrop-filter:blur(6px);}
+    .card h2 { text-align:center; font-size:22px; color:#00b7ff; margin-bottom:15px; }
 
-    .logo-area h1 {
-      font-size: 28px;
-      font-weight: 700;
-      color: #00b7ff;
-      margin-top: 10px;
-      text-shadow: 0 0 15px #009dff;
-    }
+    .packages { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; }
+    .item { background: rgba(255,255,255,0.05); padding:12px; text-align:center; border-radius:10px; border:1px solid rgba(0,153,255,0.2); transition:0.3s; }
+    .item:hover { transform:scale(1.05); box-shadow:0 0 20px #00aaff; }
+    .item img { width:90px; border-radius:8px; }
+    .item .price { color:#00eaff; font-weight:bold; }
 
-    .logo-area p {
-      font-size: 14px;
-      color: #a0caff;
-      margin-top: 4px;
-    }
+    input[type="number"], input[type="text"] { width:100%; padding:10px; margin-top:8px; background: rgba(0,0,0,0.4); color:white; border:1px solid rgba(0,153,255,0.3); border-radius:5px; text-align:center; }
 
-    /* MAIN CONTAINER */
-    .container {
-      padding: 20px;
-      max-width: 950px;
-      margin: 20px auto;
-    }
+    .whatsapp-btn { background:#0078ff; color:#fff; padding:12px; border:none; border-radius:8px; font-weight:bold; font-size:16px; width:100%; cursor:pointer; transition:0.3s; box-shadow:0 0 15px rgba(0,153,255,0.3); }
+    .whatsapp-btn:hover { background:#009eff; box-shadow:0 0 25px rgba(0,153,255,0.6); }
 
-    .card {
-      background-color: rgba(17, 22, 33, 0.85);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(0,153,255,0.3);
-      box-shadow: 0 0 20px rgba(0,153,255,0.1);
-      backdrop-filter: blur(6px);
-    }
+    .order-summary { margin-top:20px; background: rgba(0,0,0,0.3); border-radius:10px; padding:20px; border:1px solid rgba(0,153,255,0.3); }
+    .success-message { display:none; background: rgba(0,255,0,0.05); border-left:5px solid #00ffb0; text-align:center; padding:15px; margin-top:20px; color:#00ffb0; }
 
-    .card h2 {
-      color: #00b7ff;
-      margin-bottom: 15px;
-      text-align: center;
-      font-size: 22px;
-    }
+    .bank-section { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; }
+    .bank-box { background: rgba(255,255,255,0.05); padding:15px; border-radius:10px; border-left:3px solid #00aaff; }
+    .bank-box b { color:#00b7ff; }
 
-    /* PACKAGE GRID – 2 PER ROW */
-    .packages {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-    }
-
-    .item {
-      background: rgba(255,255,255,0.05);
-      padding: 12px;
-      text-align: center;
-      border-radius: 10px;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(0,153,255,0.2);
-    }
-
-    .item:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #00aaff;
-    }
-
-    .item img {
-      width: 90px;
-      border-radius: 8px;
-    }
-
-    .item .price {
-      color: #00eaff;
-      font-weight: bold;
-    }
-
-    /* INPUT STYLES */
-    input[type="number"], input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      background-color: rgba(0,0,0,0.4);
-      color: white;
-      border: 1px solid rgba(0,153,255,0.3);
-      border-radius: 5px;
-      text-align: center;
-    }
-
-    /* 🟦 Custom Upload Button */
-    .file-upload {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      border: 2px dashed rgba(0,153,255,0.4);
-      border-radius: 10px;
-      padding: 15px;
-      cursor: pointer;
-      transition: 0.3s;
-      background: rgba(0,153,255,0.05);
-    }
-
-    .file-upload:hover {
-      background: rgba(0,153,255,0.1);
-      box-shadow: 0 0 10px #00aaff;
-    }
-
-    .file-upload input[type="file"] {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
-    .file-upload span {
-      color: #00b7ff;
-      font-weight: 600;
-    }
-
-    .whatsapp-btn {
-      background-color: #0078ff;
-      color: #fff;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 16px;
-      width: 100%;
-      cursor: pointer;
-      transition: background 0.3s;
-      box-shadow: 0 0 15px rgba(0,153,255,0.3);
-    }
-
-    .whatsapp-btn:hover {
-      background-color: #009eff;
-      box-shadow: 0 0 25px rgba(0,153,255,0.6);
-    }
-
-    .order-summary {
-      margin-top: 20px;
-      background: rgba(0,0,0,0.3);
-      border-radius: 10px;
-      padding: 20px;
-      border: 1px solid rgba(0,153,255,0.3);
-    }
-
-    .success-message {
-      display: none;
-      background: rgba(0,255,0,0.05);
-      border-left: 5px solid #00ffb0;
-      text-align: center;
-      padding: 15px;
-      margin-top: 20px;
-      color: #00ffb0;
-    }
-
-    /* BANK SECTION */
-    .bank-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-    }
-
-    .bank-box {
-      background: rgba(255,255,255,0.05);
-      padding: 15px;
-      border-radius: 10px;
-      border-left: 3px solid #00aaff;
-    }
-
-    .bank-box b {
-      color: #00b7ff;
-    }
-
-    footer {
-      text-align: center;
-      color: #8bbaff;
-      font-size: 13px;
-      margin: 40px 0;
-    }
+    footer { text-align:center; color:#8bbaff; font-size:13px; margin:40px 0; }
   </style>
 </head>
-<body>
 
+<body>
 <header></header>
 
 <div class="logo-area">
@@ -244,93 +70,52 @@
 </div>
 
 <div class="container">
+
+  <!-- Packages -->
   <div class="card">
     <h2>💎 Select Your Package</h2>
     <div class="packages" id="packages"></div>
   </div>
 
+  <!-- Order Section -->
   <div class="card">
-    <div class="card">
-  <h2>📋 Your Order</h2>
-  <div class="order-summary">
-    <label><b>Player ID:</b></label>
-    <input type="text" id="playerId" placeholder="Enter your Free Fire ID">
+    <h2>📋 Your Order</h2>
+    <div class="order-summary">
+      <label><b>Player ID:</b></label>
+      <input type="text" id="playerId" placeholder="Enter your Free Fire ID">
 
-    <label><b>Upload Payment Receipt (PDF preferred):</b></label>
-    <input type="file" id="receipt" accept="image/*,.pdf">
+      <label><b>Upload Payment Receipt (Image/PDF):</b></label>
+      <input type="file" id="receipt" accept="image/*,.pdf">
 
-    <button class="whatsapp-btn" onclick="sendOrder()">🚀 Send Order via WhatsApp</button>
+      <button class="whatsapp-btn" onclick="sendOrder()">🚀 Send Order via WhatsApp</button>
 
-    <div id="success" class="success-message">
-      ✅ Order prepared successfully!<br>
-      ⏳ Please check WhatsApp to send your order.<br>
-      🙏 Thank You ❤️
+      <div id="success" class="success-message">
+        ✅ Order PDF prepared!<br>⏳ Please check WhatsApp to send your order.<br>🙏 Thank You ❤️
+      </div>
+
+      <div id="order-list" style="margin-top:15px;"></div>
+      <p><b>Items Selected:</b> <span id="items">0</span></p>
+      <p><b>Total:</b> <span id="total">0</span> LKR</p>
     </div>
   </div>
-</div>
 
-<script>
-function sendOrder() {
-    const playerId = document.getElementById("playerId").value.trim();
-    const receipt = document.getElementById("receipt").files[0];
-
-    if(!playerId || !receipt) {
-        alert("Please enter Player ID and upload receipt!");
-        return;
-    }
-
-    // Convert image to PDF if it's an image
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        let fileData = e.target.result;
-
-        // For simplicity, just generate a download link for the file
-        const link = document.createElement("a");
-        link.href = fileData;
-        link.download = receipt.name.endsWith(".pdf") ? receipt.name : "receipt.pdf";
-        link.click();
-
-        // Generate WhatsApp link
-        const message = encodeURIComponent(`📋 Order Details\nPlayer ID: ${playerId}\nPlease find my payment receipt attached (downloaded PDF).`);
-        const phoneNumber = "947761332610"; // Replace with your WhatsApp number with country code
-        window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
-
-        document.getElementById("success").style.display = "block";
-    };
-
-    // Read as data URL
-    reader.readAsDataURL(receipt);
-}
-</script>
-
+  <!-- Payment Details -->
   <div class="card">
     <h2>💰 Payment Details</h2>
     <div class="bank-section">
       <div class="bank-box">
-        <p>🏦 <b>Bank - NSB</b><br>
-        Account: 109090193739<br>
-        Name: G.M.N.N.JAYASURIYA<br>
-        Branch: Ampara 2nd</p>
+        <p>🏦 <b>Bank - NSB</b><br>Account: 109090193739<br>Name: G.M.N.N.JAYASURIYA<br>Branch: Ampara 2nd</p>
       </div>
-
       <div class="bank-box">
-        <p>🏦 <b>Bank - Dialog Finance PLC</b><br>
-        Account: 001021434294<br>
-        Name: Gardiya M. Nethmintha Nimsara J.<br>
-        Branch: Head Office</p>
+        <p>🏦 <b>Bank - Dialog Finance PLC</b><br>Account: 001021434294<br>Name: Gardiya M. Nethmintha Nimsara J.<br>Branch: Head Office</p>
       </div>
-
       <div class="bank-box">
-        <p>🏦 <b>Bank - Peoples Bank</b><br>
-        Account: 015200130082418<br>
-        Name: Nethmintha Nimsara<br>
-        Branch: Ampara</p>
+        <p>🏦 <b>Bank - Peoples Bank</b><br>Account: 015200130082418<br>Name: Nethmintha Nimsara<br>Branch: Ampara</p>
       </div>
     </div>
-
-    <p style="margin-top:15px;">🪄 <b>EZ Cash:</b> 0740532742<br>
-       ⚠️ Add Rs.20 extra for EZ Cash payments.</p>
+    <p style="margin-top:15px;">🪄 <b>EZ Cash:</b> 0740532742<br>⚠️ Add Rs.20 extra for EZ Cash payments.</p>
   </div>
+
 </div>
 
 <footer>
@@ -338,6 +123,7 @@ function sendOrder() {
 </footer>
 
 <script>
+  // Product List
   const products = [
     { name: "Weekly Lite Membership", price: 120, img: "https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg" },
     { name: "Weekly Membership", price: 480, img: "https://i.ibb.co/XxPzttVP/af85c42caad4127d.jpg" },
@@ -356,9 +142,9 @@ function sendOrder() {
   let order = [];
   let total = 0;
 
-  products.forEach((p, i) => {
+  products.forEach((p,i)=>{
     let item = document.createElement("div");
-    item.className = "item";
+    item.className="item";
     item.innerHTML = `
       <img src="${p.img}" alt="${p.name}">
       <p>${p.name}</p>
@@ -368,35 +154,69 @@ function sendOrder() {
     packageContainer.appendChild(item);
   });
 
-  function updateOrder() {
-    order = [];
-    total = 0;
-    products.forEach((p, i) => {
-      let qty = parseInt(document.getElementById(`qty-${i}`).value) || 0;
-      if (qty > 0) {
-        order.push(`${p.name} x${qty} = ${(p.price * qty).toLocaleString()} LKR`);
-        total += p.price * qty;
+  function updateOrder(){
+    order=[];
+    total=0;
+    products.forEach((p,i)=>{
+      let qty=parseInt(document.getElementById(`qty-${i}`).value)||0;
+      if(qty>0){
+        order.push(`${p.name} x${qty} = ${(p.price*qty).toLocaleString()} LKR`);
+        total+=p.price*qty;
       }
     });
-    orderList.innerHTML = order.join("<br>");
-    itemsEl.textContent = order.length;
-    totalEl.textContent = total.toLocaleString();
+    orderList.innerHTML=order.join("<br>");
+    itemsEl.textContent=order.length;
+    totalEl.textContent=total.toLocaleString();
   }
 
-  function sendOrder() {
-    let playerId = document.getElementById("playerId").value;
-    let receipt = document.getElementById("receipt").files[0];
+  // PDF + WhatsApp
+  async function sendOrder(){
+    const { jsPDF } = window.jspdf;
+    let playerId=document.getElementById("playerId").value.trim();
+    let receipt=document.getElementById("receipt").files[0];
+    const logoUrl="https://i.ibb.co/tPw8mzct/1e6bc3f6d139fdf8.jpg";
 
-    if (!playerId) return alert("⚠️ Please enter your Player ID!");
-    if (order.length === 0) return alert("⚠️ Please select at least one package!");
-    if (!receipt) return alert("⚠️ Please upload your payment receipt!");
+    if(!playerId) return alert("⚠️ Please enter your Player ID!");
+    if(order.length===0) return alert("⚠️ Please select at least one package!");
+    if(!receipt) return alert("⚠️ Please upload your payment receipt!");
 
-    let message = `💎 FREE FIRE ORDER 💎\n👤 Player ID: ${playerId}\n🛒 Order:\n${order.join("\n")}\n💰 Total: ${total.toLocaleString()} LKR\n📎 Please attach your payment receipt.\n✅ Thank you!`;
+    const pdf=new jsPDF();
 
-    let url = `https://wa.me/94784280074?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+    // Logo
+    const logoImg=new Image();
+    logoImg.crossOrigin="anonymous";
+    logoImg.src=logoUrl;
+    logoImg.onload=function(){
+      pdf.addImage(logoImg,'PNG',80,10,50,50);
+      pdf.setFontSize(18);
+      pdf.setTextColor(0,0,255);
+      pdf.text("💎 FREE FIRE ORDER 💎",105,70,null,null,"center");
+      pdf.setFontSize(12);
+      pdf.setTextColor(0,0,0);
+      pdf.text(`Player ID: ${playerId}`,20,85);
+      pdf.text("Order Details:",20,95);
+      let y=105;
+      order.forEach(item=>{pdf.text(item,25,y); y+=10;});
+      pdf.text(`Total: ${total.toLocaleString()} LKR`,20,y+10);
 
-    successMsg.style.display = "block";
+      if(receipt.type.startsWith("image/")){
+        const reader=new FileReader();
+        reader.onload=function(e){
+          const img=new Image();
+          img.src=e.target.result;
+          img.onload=function(){
+            pdf.addImage(img,'PNG',20,y+20,150,100);
+            pdf.save("FreeFire_Order.pdf");
+          }
+        };
+        reader.readAsDataURL(receipt);
+      } else { pdf.save("FreeFire_Order.pdf"); }
+
+      let message=`💎 FREE FIRE ORDER 💎\n👤 Player ID: ${playerId}\n🛒 Order:\n${order.join("\n")}\n💰 Total: ${total.toLocaleString()} LKR\n📎 Please attach your payment receipt.\n✅ Thank you!`;
+      let url=`https://wa.me/94784280074?text=${encodeURIComponent(message)}`;
+      window.open(url,"_blank");
+      successMsg.style.display="block";
+    }
   }
 </script>
 </body>
