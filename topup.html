@@ -196,22 +196,22 @@ function sendOrder(){
 
   const orderNumber = "ORD" + Date.now();
   let orderText = order.map(o=>`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`).join("\n");
-  const message=`╔════════════════════╗
+  const message=`const message = `╔════════════════════╗
 ║   💎 FREE FIRE ORDER 💎   ║
 ╚════════════════════╝
 
 ╔════════════════════╗
-║ *🌐 Order No* : `${orderNumber}`       ║
-║ *👤 Player ID* : `${playerId}`      ║
-║ *🛒 Order* :                      ║
-║ `${orderText.replace(/\n/g, '\n║ ')} ║
-║ *💰 Total* : `${(total-discount).toLocaleString()} LKR` ║
-║ *📎 Payment receipt attached*     ║
-║ *🔗 Web Link* : `${window.location.href}` ║
+║ Order No: ${orderNumber}       ║
+║ 👤 Player ID: ${playerId}      ║
+║ 🛒 Order:                      ║
+║ ${orderText.replace(/\n/g, '\n║ ')} ║
+║ 💰 Total: ${(total-discount).toLocaleString()} LKR ║
+║ 📎 Payment receipt attached     ║
+║ 🔗 Web Link: ${window.location.href} ║
 ╚════════════════════╝
 
 ╔════════════════════╗
-║    *_✅ Thank you!_*       ║
+║        ✅ Thank you!       ║
 ╚════════════════════╝`;
 
   // PDF Creation
