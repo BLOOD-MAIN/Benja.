@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BENJA LIVE STORE | Profile</title>
+<title>BENJA LIVE ACCOUNT STORE | Profile</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   :root { 
@@ -35,6 +35,46 @@
 
   .cover-img { filter: blur(3px) saturate(1.2); }
   .like-animate { transform: scale(1.3); transition: transform 0.2s ease; }
+
+  /* Banner Slideshow */
+  .banner-container { position: relative; width: 100%; height: 36; overflow: hidden; border-radius: 1rem; margin-top: 1rem;}
+  .banner-container img { position: absolute; inset: 0; width: 100%; height: 100%; object-cover; opacity: 0; transition: opacity 1s; }
+  .banner-container img.active { opacity: 1; }
+
+  /* Auto-scrolling text banner */
+  .text-banner-container {
+    overflow: hidden;
+    white-space: nowrap;
+    background: linear-gradient(90deg, #0b3c91, #0a2edf, #0546a0);
+    padding: 0.5rem 0;
+    border-radius: 1rem;
+    margin-top: 1rem;
+  }
+
+  .text-banner-content {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scrollText 12s linear infinite;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  @keyframes scrollText {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* Comment toggle button */
+  #toggleCommentBtn { 
+    background: rgba(0, 63, 191, 0.8); 
+    padding: 0.5rem 1rem; 
+    border-radius: 0.75rem; 
+    font-weight: bold; 
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  #toggleCommentBtn:hover { transform: scale(1.05); }
 </style>
 </head>
 <body class="min-h-screen text-white flex flex-col items-center p-6 relative">
@@ -44,17 +84,26 @@
   <!-- Profile Card -->
   <div class="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden shine">
 
-    <!-- Cover photo -->
-    <div class="relative h-44 overflow-hidden">
-      <img src="src/IMG-20251020-WA0000.jpg" alt="Cover" class="w-full h-full object-cover cover-img" />
-    </div>
-
-    <!-- Header -->
+    <!-- Profile Header -->
     <div class="p-8 md:p-10 border-b border-white/10 text-center">
-      <img src="https://i.ibb.co/cSbw2jQD/Whats-App-Image-2025-09-29-at-13-50-04.jpg" 
-           class="h-28 w-28 rounded-full mx-auto -mt-20 border-4 border-white/20 shadow-lg" />
-      <h1 class="text-4xl font-extrabold tracking-tight text-blue-400 drop-shadow-[0_0_15px_rgba(63,191,244,0.35)] mt-4">R2K GAMING</h1>
-      <p class="text-sm text-white/70 max-w-md mx-auto mt-2">Subscribe, Join & Follow <span class="text-blue-300 font-semibold">R2K GAMING</span> social media pages ✨</p>
+      <img src="src/IMG-20251020-WA0000.jpg" 
+           class="h-28 w-28 rounded-full mx-auto border-4 border-white/20 shadow-lg" />
+      <h1 class="text-4xl font-extrabold tracking-tight text-blue-400 drop-shadow-[0_0_15px_rgba(63,191,244,0.35)] mt-4">BENJA LIVE STORE</h1>
+      <p class="text-sm text-white/70 max-w-md mx-auto mt-2">Subscribe, Join & Follow <span class="text-blue-300 font-semibold">BENJA LIVE STORE</span> social media pages ✨</p>
+
+      <!-- Image Slideshow Banner -->
+      <div class="banner-container">
+        <img src="https://i.ibb.co/0FJf4Hp/image1.jpg" class="active" />
+        <img src="https://i.ibb.co/2d0Pz9k/image2.jpg" />
+        <img src="https://i.ibb.co/M8dLh1b/image3.jpg" />
+      </div>
+
+      <!-- Scrolling Text / Logo Banner -->
+      <div class="text-banner-container">
+        <div class="text-banner-content">
+          🔥 Hot Deals! 💎 Top Up Offers! 🎮 New Accounts! 🛒 Shop Now! | 🔥 Hot Deals! 💎 Top Up Offers! 🎮 New Accounts! 🛒 Shop Now!
+        </div>
+      </div>
     </div>
 
     <!-- Social Buttons Grid -->
@@ -113,8 +162,8 @@
       <a href="topup.html" 
         class="group flex items-center gap-4 rounded-2xl border border-yellow-500/40 bg-gradient-to-r from-yellow-600/80 to-orange-800/70 p-5 hover:scale-[1.03] transition transform duration-300">
         <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15 text-2xl">💎</div>
-        <div class="topup.html">
-          <h3 class="topup.html">Top Up / Center</h3>
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold">Top Up / Center</h3>
           <p class="text-sm text-white/70">Recharge your account</p>
         </div>
       </a>
@@ -130,8 +179,13 @@
       </a>
     </div>
 
+    <!-- Toggle Comment Button -->
+    <div class="p-6 md:p-8 border-t border-white/10 text-center">
+      <button id="toggleCommentBtn">💬 Open Comment Section</button>
+    </div>
+
     <!-- Comment Section -->
-    <div class="p-6 md:p-8 border-t border-white/10">
+    <div id="commentSection" class="p-6 md:p-8 border-t border-white/10 hidden">
       <h2 class="text-xl font-semibold text-blue-300 mb-4">💬 Leave a Comment</h2>
       <form id="commentForm" class="flex flex-col gap-3">
         <input type="text" id="name" placeholder="Your Name" class="p-3 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
@@ -139,14 +193,22 @@
         <button type="submit" class="bg-blue-500/80 hover:bg-blue-600/90 transition rounded-lg p-3 font-semibold">Submit</button>
       </form>
 
-      <div id="commentList" class="mt-6 flex flex-col gap-4 max-h-64 overflow-y-auto scrollbar-thin">
-        <!-- Comments will appear here -->
-      </div>
+      <div id="commentList" class="mt-6 flex flex-col gap-4 max-h-64 overflow-y-auto scrollbar-thin"></div>
     </div>
+
   </div>
 </div>
 
 <script>
+// Comment Section Toggle
+const toggleBtn = document.getElementById('toggleCommentBtn');
+const commentSection = document.getElementById('commentSection');
+toggleBtn.addEventListener('click', () => {
+  commentSection.classList.toggle('hidden');
+  toggleBtn.textContent = commentSection.classList.contains('hidden') ? '💬 Open Comment Section' : '💬 Close Comment Section';
+});
+
+// Comments Logic
 const form = document.getElementById('commentForm');
 const commentList = document.getElementById('commentList');
 let comments = JSON.parse(localStorage.getItem('comments')) || [];
@@ -158,28 +220,7 @@ function renderComments(){
   comments.forEach(c=>{
     const div = document.createElement('div');
     div.className = "bg-white/10 p-3 rounded-lg border border-white/20 flex flex-col gap-2";
-    const repliesHtml = c.replies?.map(r => `<div class="bg-white/20 p-2 rounded-md ml-4 text-white/80 flex justify-between items-center gap-2">
-      <span><strong>${r.name}</strong>: ${r.text}</span>
-      <button class="like-reply-btn text-sm text-blue-300 hover:text-blue-400">${r.likes} 👍</button>
-    </div>`).join('') || '';
-    div.innerHTML = `
-      <div class="flex justify-between items-start">
-        <div class="flex-1">
-          <strong>${c.name}</strong>
-          <p>${c.text}</p>
-        </div>
-        <div class="flex flex-col items-end gap-2 text-sm">
-          <button class="like-btn bg-blue-500/30 px-2 py-1 rounded-lg">${c.likes} 👍</button>
-          <button class="reply-toggle-btn bg-white/10 px-2 py-1 rounded-lg">Reply</button>
-        </div>
-      </div>
-      <div class="reply-input-container mt-2 hidden flex flex-col gap-2">
-        <input type="text" placeholder="Your Name" class="reply-name-input p-2 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400">
-        <input type="text" placeholder="Type your reply..." class="reply-input p-2 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-400">
-        <button class="reply-submit-btn bg-blue-500/80 hover:bg-blue-600/90 transition rounded-lg p-2 font-semibold text-sm">Reply</button>
-      </div>
-      ${repliesHtml}
-    `;
+    div.innerHTML = `<strong>${c.name}</strong><p>${c.text}</p>`;
     commentList.appendChild(div);
   });
 }
@@ -189,13 +230,25 @@ form.addEventListener('submit', e=>{
   const name = document.getElementById('name').value.trim();
   const text = document.getElementById('comment').value.trim();
   if(!name || !text) return;
-  comments.push({name, text, likes:0, replies:[]});
+  comments.push({name, text});
   saveComments();
   renderComments();
   form.reset();
 });
 
 renderComments();
+
+// Banner Slideshow
+const slides = document.querySelectorAll('.banner-container img');
+let currentIndex = 0;
+
+function showNextSlide() {
+  slides.forEach((slide) => slide.classList.remove('active'));
+  slides[currentIndex].classList.add('active');
+  currentIndex = (currentIndex + 1) % slides.length;
+}
+
+setInterval(showNextSlide, 5000);
 </script>
 
 </body>
