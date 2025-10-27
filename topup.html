@@ -250,30 +250,58 @@
   </div>
 
   <div class="card">
-    <h2>📋 Your Order</h2>
-    <div class="order-summary">
-      <label><b>Player ID:</b></label>
-      <input type="text" id="playerId" placeholder="Enter your Free Fire ID">
+    <div class="card">
+  <h2>📋 Your Order</h2>
+  <div class="order-summary">
+    <label><b>Player ID:</b></label>
+    <input type="text" id="playerId" placeholder="Enter your Free Fire ID">
 
-      <div id="order-list" style="margin-top:10px;"></div>
-      <p><b>Items:</b> <span id="items">0</span></p>
-      <p><b>Total:</b> <span id="total">0</span> LKR</p>
+    <label><b>Upload Payment Receipt (PDF preferred):</b></label>
+    <input type="file" id="receipt" accept="image/*,.pdf">
 
-      <label><b>Upload Payment Receipt:</b></label>
-      <div class="file-upload">
-        <input type="file" id="receipt" accept="image/*">
-        <span>📸 Upload Payment Receipt</span>
-      </div>
+    <button class="whatsapp-btn" onclick="sendOrder()">🚀 Send Order via WhatsApp</button>
 
-      <button class="whatsapp-btn" onclick="sendOrder()">🚀 Send Order via WhatsApp</button>
-
-      <div id="success" class="success-message">
-        ✅ Order sent successfully!<br>
-        ⏳ Please wait 10 minutes...<br>
-        🙏 Thank You ❤️
-      </div>
+    <div id="success" class="success-message">
+      ✅ Order prepared successfully!<br>
+      ⏳ Please check WhatsApp to send your order.<br>
+      🙏 Thank You ❤️
     </div>
   </div>
+</div>
+
+<script>
+function sendOrder() {
+    const playerId = document.getElementById("playerId").value.trim();
+    const receipt = document.getElementById("receipt").files[0];
+
+    if(!playerId || !receipt) {
+        alert("Please enter Player ID and upload receipt!");
+        return;
+    }
+
+    // Convert image to PDF if it's an image
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        let fileData = e.target.result;
+
+        // For simplicity, just generate a download link for the file
+        const link = document.createElement("a");
+        link.href = fileData;
+        link.download = receipt.name.endsWith(".pdf") ? receipt.name : "receipt.pdf";
+        link.click();
+
+        // Generate WhatsApp link
+        const message = encodeURIComponent(`📋 Order Details\nPlayer ID: ${playerId}\nPlease find my payment receipt attached (downloaded PDF).`);
+        const phoneNumber = "947761332610"; // Replace with your WhatsApp number with country code
+        window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+
+        document.getElementById("success").style.display = "block";
+    };
+
+    // Read as data URL
+    reader.readAsDataURL(receipt);
+}
+</script>
 
   <div class="card">
     <h2>💰 Payment Details</h2>
