@@ -98,7 +98,7 @@ header{height:220px;background:url('https://files.catbox.moe/qhr7sl.jpg') center
   </div>
 </div>
 
-<footer>© 2025 NIM TopUp Store | All Rights Reserved</footer>
+<footer>© 2025 BENJA TopUp Store | All Rights Reserved</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
@@ -196,7 +196,23 @@ function sendOrder(){
 
   const orderNumber = "ORD" + Date.now();
   let orderText = order.map(o=>`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`).join("\n");
-  const message=`💎 FREE FIRE ORDER 💎\nOrder No: ${orderNumber}\n👤 Player ID: ${playerId}\n🛒 Order:\n${orderText}\n💰 Total: ${(total-discount).toLocaleString()} LKR\n📎 Payment receipt attached\n🔗 Web Link: ${window.location.href}\n✅ Thank you!`;
+  const message=`╔════════════════════╗
+║   💎 FREE FIRE ORDER 💎   ║
+╚════════════════════╝
+
+╔════════════════════╗
+║ Order No: ${orderNumber}       ║
+║ 👤 Player ID: ${playerId}      ║
+║ 🛒 Order:                      ║
+║ ${orderText.replace(/\n/g, '\n║ ')} ║
+║ 💰 Total: ${(total-discount).toLocaleString()} LKR ║
+║ 📎 Payment receipt attached     ║
+║ 🔗 Web Link: ${window.location.href} ║
+╚════════════════════╝
+
+╔════════════════════╗
+║        ✅ Thank you!       ║
+╚════════════════════╝`;
 
   // PDF Creation
   const { jsPDF } = window.jspdf;
