@@ -5,98 +5,75 @@
 <title>BENJA TopUp Store</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* Reset & base */
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
-body { background:#0a0e17; color:#fff; }
-a { text-decoration:none; color:inherit; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#0a0e17;color:#fff;}
+a{text-decoration:none;color:inherit;}
 
 /* Header & Logo */
-header {
-  height:220px; background:url('https://files.catbox.moe/qhr7sl.jpg') center/cover no-repeat;
-  filter:brightness(0.35) blur(1px); border-bottom:2px solid rgba(0,153,255,0.4);
-}
-.logo-area {
-  position:relative; text-align:center; margin-top:-60px;
-}
-.logo-area img {
-  width:120px; border-radius:50%; border:3px solid #00aaff;
-  box-shadow:0 0 25px #00aaff; background:#0f1218;
-}
-.logo-area h1 { font-size:28px; color:#00b7ff; margin-top:10px; text-shadow:0 0 15px #009dff; }
-.logo-area p { font-size:14px; color:#a0caff; margin-top:4px; }
+header{height:220px;background:url('https://files.catbox.moe/qhr7sl.jpg') center/cover no-repeat;filter:brightness(0.35) blur(1px);border-bottom:2px solid rgba(0,153,255,0.4);}
+.logo-area{position:relative;text-align:center;margin-top:-60px;}
+.logo-area img{width:120px;border-radius:50%;border:3px solid #00aaff;box-shadow:0 0 25px #00aaff;background:#0f1218;}
+.logo-area h1{font-size:28px;color:#00b7ff;margin-top:10px;text-shadow:0 0 15px #009dff;}
+.logo-area p{font-size:14px;color:#a0caff;margin-top:4px;}
 
 /* Container */
-.container { padding:20px; max-width:1000px; margin:20px auto; display:flex; flex-direction:column; gap:20px; }
+.container{padding:20px;max-width:1000px;margin:20px auto;display:flex;flex-direction:column;gap:20px;}
 
 /* Card */
-.card {
-  background:rgba(17,22,33,0.85); border-radius:12px; padding:20px;
-  border:1px solid rgba(0,153,255,0.3); box-shadow:0 0 20px rgba(0,153,255,0.1);
-  backdrop-filter:blur(6px);
-}
-.card h2 { text-align:center; color:#00b7ff; margin-bottom:15px; font-size:22px; }
+.card{background:rgba(17,22,33,0.85);border-radius:15px;padding:20px;border:1px solid rgba(0,153,255,0.3);box-shadow:0 0 25px rgba(0,153,255,0.1);backdrop-filter:blur(8px);transition:0.3s;}
+.card h2{text-align:center;color:#00b7ff;margin-bottom:15px;font-size:22px;text-shadow:0 0 8px #00eaff;}
 
 /* Packages */
-.packages { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
-.item {
-  background:rgba(255,255,255,0.05); padding:15px; border-radius:12px;
-  border:1px solid rgba(0,153,255,0.2); text-align:center; transition:all 0.3s ease;
-}
-.item:hover { transform:scale(1.05); box-shadow:0 0 25px #00aaff; }
-.item img { width:100px; border-radius:10px; margin-bottom:10px; }
-.item .price { color:#00eaff; font-weight:bold; margin-bottom:5px; }
-.qty-controls { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:8px; }
-.qty-controls button {
-  padding:6px 12px; background:#0078ff; border:none; color:#fff; border-radius:6px; cursor:pointer;
-  font-weight:bold; font-size:14px; transition:0.2s;
-}
-.qty-controls button:hover { background:#009eff; }
-.qty-controls span { min-width:30px; display:inline-block; text-align:center; }
+.packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.item{position:relative;overflow:hidden;background:rgba(255,255,255,0.05);padding:15px;border-radius:15px;border:1px solid rgba(0,153,255,0.2);text-align:center;transition:transform 0.3s, box-shadow 0.3s;}
+.item:hover{transform:scale(1.05);box-shadow:0 0 30px #00aaff;}
+.item img{width:100px;border-radius:10px;margin-bottom:10px;transition:0.3s;}
+.item .overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);color:#00eaff;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s;}
+.item:hover .overlay{opacity:1;}
+.overlay button{padding:6px 14px;margin:3px;background:#0078ff;border:none;border-radius:6px;color:#fff;cursor:pointer;font-weight:bold;transition:0.3s;}
+.overlay button:hover{background:#00bfff;transform:scale(1.05);}
+.item .price{color:#00eaff;font-weight:bold;margin-bottom:5px;}
+
+/* Qty Controls (inside overlay) */
+.qty-controls{display:flex;gap:10px;margin-top:5px;}
+.qty-controls button{padding:5px 10px;background:#0078ff;border:none;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;transition:0.2s;}
+.qty-controls button:hover{background:#00bfff;}
+.qty-controls span{min-width:30px;text-align:center;display:inline-block;}
 
 /* File upload */
-.file-upload {
-  display:flex; align-items:center; justify-content:center; position:relative;
-  border:2px dashed rgba(0,153,255,0.4); border-radius:10px; padding:18px; cursor:pointer;
-  transition:0.3s; background:rgba(0,153,255,0.05); margin-top:10px;
-}
-.file-upload:hover { background:rgba(0,153,255,0.1); box-shadow:0 0 15px #00aaff; }
-.file-upload input[type="file"] { position:absolute; opacity:0; cursor:pointer; width:100%; height:100%; }
-.file-upload span { color:#00b7ff; font-weight:600; }
+.file-upload{display:flex;align-items:center;justify-content:center;position:relative;border:2px dashed rgba(0,153,255,0.4);border-radius:12px;padding:18px;cursor:pointer;transition:0.3s;background:rgba(0,153,255,0.05);}
+.file-upload:hover{background:rgba(0,153,255,0.12);box-shadow:0 0 15px #00aaff;}
+.file-upload input[type="file"]{position:absolute;opacity:0;cursor:pointer;width:100%;height:100%;}
+.file-upload span{color:#00b7ff;font-weight:600;}
 
-/* Order summary */
-.order-summary {
-  margin-top:15px; background:rgba(0,0,0,0.3); border-radius:12px; padding:20px;
-  border:1px solid rgba(0,153,255,0.3);
-}
-.order-summary ul { list-style:none; padding-left:0; margin-top:10px; }
-.order-summary li { margin-bottom:5px; }
-#totalPrice { text-align:right; font-weight:bold; font-size:16px; margin-top:10px; }
-.success-message {
-  display:none; background:rgba(0,255,0,0.05); border-left:5px solid #00ffb0;
-  text-align:center; padding:15px; margin-top:20px; color:#00ffb0;
-}
+/* Order Summary */
+.order-summary{margin-top:15px;background:rgba(0,0,0,0.35);border-radius:15px;padding:20px;border:1px solid rgba(0,153,255,0.3);transition:0.3s;}
+.order-summary ul{list-style:none;padding-left:0;margin-top:10px;}
+.order-summary li{margin-bottom:5px;opacity:1;transition:opacity 0.3s;}
+#totalPrice{text-align:right;font-weight:bold;font-size:16px;margin-top:10px;}
+.success-message{display:none;background:rgba(0,255,0,0.05);border-left:5px solid #00ffb0;text-align:center;padding:15px;margin-top:20px;color:#00ffb0;animation:fadeIn 0.6s ease-in-out;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
 /* Inputs & buttons */
-#promoCode { width:50%; padding:8px; margin-top:10px; border-radius:6px; border:1px solid rgba(0,153,255,0.3); background:rgba(0,0,0,0.4); color:#fff; }
-#applyPromo { padding:8px 12px; margin-left:5px; background:#00b7ff; color:#000; border:none; border-radius:6px; cursor:pointer; font-weight:bold; }
-#clearCart { padding:8px 12px; margin-top:10px; background:#ff0055; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold; }
-#playerId { flex:1; padding:10px 15px; border-radius:8px; border:1px solid #00b7ff; background:rgba(0,0,0,0.4); color:#fff; font-size:16px; outline:none; transition:0.3s; }
-#playerId:focus { border-color:#00eaff; box-shadow:0 0 10px #00eaff; background:rgba(0,0,0,0.6); }
-.player-id-container { margin-top:15px; display:flex; align-items:center; gap:10px; }
+#promoCode{width:50%;padding:8px;margin-top:10px;border-radius:6px;border:1px solid rgba(0,153,255,0.3);background:rgba(0,0,0,0.4);color:#fff;}
+#applyPromo,#clearCart{padding:8px 12px;margin:5px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;transition:0.3s;}
+#applyPromo{background:#00b7ff;color:#000;}
+#applyPromo:hover{background:linear-gradient(90deg,#00eaff,#0078ff);color:#fff;transform:scale(1.05);}
+#clearCart{background:#ff0055;color:#fff;}
+#clearCart:hover{background:#ff3399;transform:scale(1.05);}
+#playerId{flex:1;padding:10px 15px;border-radius:8px;border:1px solid #00b7ff;background:rgba(0,0,0,0.4);color:#fff;font-size:16px;outline:none;transition:0.3s;}
+#playerId:focus{border-color:#00eaff;box-shadow:0 0 10px #00eaff;background:rgba(0,0,0,0.6);}
+.player-id-container{margin-top:15px;display:flex;align-items:center;gap:10px;}
 
 /* WhatsApp button */
-.whatsapp-btn {
-  background:#0078ff; color:#fff; padding:12px; border:none; border-radius:8px;
-  font-weight:bold; font-size:16px; width:100%; cursor:pointer; transition:0.3s; margin-top:10px;
-  box-shadow:0 0 15px rgba(0,153,255,0.3);
-}
-.whatsapp-btn:hover { background:#009eff; box-shadow:0 0 25px rgba(0,153,255,0.6); }
+.whatsapp-btn{background:#0078ff;color:#fff;padding:12px;border:none;border-radius:8px;font-weight:bold;font-size:16px;width:100%;cursor:pointer;transition:all 0.3s;box-shadow:0 0 15px rgba(0,153,255,0.3);}
+.whatsapp-btn:hover{background:linear-gradient(90deg,#00eaff,#0078ff);box-shadow:0 0 30px rgba(0,153,255,0.6);transform:scale(1.05);}
 
 /* Footer */
-footer { text-align:center; padding:10px; margin-top:20px; color:#00b7ff; }
+footer{text-align:center;padding:10px;margin-top:20px;color:#00b7ff;}
 
 /* Receipt preview */
-#receiptPreview { margin-top:10px; max-width:100%; border-radius:10px; display:block; }
+#receiptPreview{margin-top:10px;max-width:100%;border-radius:12px;display:block;transition:opacity 0.4s ease;}
 </style>
 </head>
 <body>
@@ -155,44 +132,45 @@ footer { text-align:center; padding:10px; margin-top:20px; color:#00b7ff; }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded",function(){
+const products=[
+{name:"Weekly Lite Membership",price:120,img:"https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg"},
+{name:"Weekly Membership",price:480,img:"https://i.ibb.co/XxPzttVP/af85c42caad4127d.jpg"},
+{name:"Monthly Membership",price:2300,img:"https://i.ibb.co/m5HtMtfJ/64dbaeaedb021e55.jpg"},
+{name:"100 Diamonds",price:270,img:"https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg"},
+{name:"520 Diamonds",price:1360,img:"https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg"},
+{name:"1080 Diamonds",price:2880,img:"https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg"}];
 
-const products = [
-  {name:"Weekly Lite Membership",price:120,img:"https://i.ibb.co/3yzYB4tc/2681e4aad1c72837.jpg"},
-  {name:"Weekly Membership",price:480,img:"https://i.ibb.co/XxPzttVP/af85c42caad4127d.jpg"},
-  {name:"Monthly Membership",price:2300,img:"https://i.ibb.co/m5HtMtfJ/64dbaeaedb021e55.jpg"},
-  {name:"100 Diamonds",price:270,img:"https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg"},
-  {name:"520 Diamonds",price:1360,img:"https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg"},
-  {name:"1080 Diamonds",price:2880,img:"https://i.ibb.co/HfR9TPWw/c26786fb15d7e0f8.jpg"}
-];
+const packageContainer=document.getElementById("packages");
+const orderList=document.getElementById("orderList");
+const totalPrice=document.getElementById("totalPrice");
+const receiptPreview=document.getElementById("receiptPreview");
+let order=[],total=0,discount=0;
 
-const packageContainer = document.getElementById("packages");
-const orderList = document.getElementById("orderList");
-const totalPrice = document.getElementById("totalPrice");
-const receiptPreview = document.getElementById("receiptPreview");
-let order = [], total = 0, discount = 0;
-
+// Create package items with overlay
 products.forEach((p,i)=>{
-  const item = document.createElement("div");
-  item.className = "item";
-  item.innerHTML = `
+  const item=document.createElement("div");
+  item.className="item";
+  item.innerHTML=`
     <img src="${p.img}" alt="${p.name}">
     <p>${p.name}</p>
-    <p class="price">${p.price.toLocaleString()} LKR</p>
-    <div class="qty-controls">
-      <button onclick="changeQty(${i},-1)">-</button>
-      <span id="qty-${i}">0</span>
-      <button onclick="changeQty(${i},1)">+</button>
+    <div class="overlay">
+      <p class="price">${p.price.toLocaleString()} LKR</p>
+      <div class="qty-controls">
+        <button onclick="changeQty(${i},-1)">-</button>
+        <span id="qty-${i}">0</span>
+        <button onclick="changeQty(${i},1)">+</button>
+      </div>
     </div>
   `;
   packageContainer.appendChild(item);
 });
 
-window.changeQty = function(index, delta){
-  const qtySpan = document.getElementById(`qty-${index}`);
-  let qty = parseInt(qtySpan.textContent);
-  qty += delta; if(qty<0) qty=0;
-  qtySpan.textContent = qty;
+window.changeQty=function(index,delta){
+  const qtySpan=document.getElementById(`qty-${index}`);
+  let qty=parseInt(qtySpan.textContent);
+  qty+=delta;if(qty<0)qty=0;
+  qtySpan.textContent=qty;
   updateOrder();
 }
 
@@ -205,66 +183,67 @@ function updateOrder(){
       order.push({name:p.name,qty,subTotal});
       const li=document.createElement("li");
       li.textContent=`${p.name} x${qty} = ${subTotal.toLocaleString()} LKR`;
-      orderList.appendChild(li);
+      li.style.opacity="0";orderList.appendChild(li);
+      setTimeout(()=>{li.style.opacity="1";},50);
       total+=subTotal;
     }
   });
   totalPrice.textContent=`Total: ${(total-discount).toLocaleString()} LKR`;
 }
 
-window.previewReceipt = function(){
-  const file = document.getElementById("receipt").files[0];
-  if(file && file.type.startsWith("image/")){
-    const reader = new FileReader();
-    reader.onload=e=>{receiptPreview.src=e.target.result; receiptPreview.style.display="block";};
+window.previewReceipt=function(){
+  const file=document.getElementById("receipt").files[0];
+  if(file&&file.type.startsWith("image/")){
+    const reader=new FileReader();
+    reader.onload=e=>{receiptPreview.src=e.target.result; receiptPreview.style.display="block"; receiptPreview.style.opacity="0"; setTimeout(()=>receiptPreview.style.opacity="1",50);}
     reader.readAsDataURL(file);
-  } else receiptPreview.style.display="none";
+  }else receiptPreview.style.display="none";
 }
 
-window.applyPromo = function(){
+window.applyPromo=function(){
   const code=document.getElementById("promoCode").value.trim();
-  if(code.toUpperCase()==="NIM10"){ discount=Math.floor(total*0.1); alert("✅ Promo applied! 10% discount."); }
-  else { discount=0; alert("⚠️ Invalid promo code."); }
+  if(code.toUpperCase()==="NIM10"){discount=Math.floor(total*0.1);alert("✅ Promo applied! 10% discount.");}
+  else{discount=0;alert("⚠️ Invalid promo code.");}
   updateOrder();
 }
 
-window.clearCart = function(){
+window.clearCart=function(){
   products.forEach((p,i)=>document.getElementById(`qty-${i}`).textContent="0");
-  discount=0; document.getElementById("promoCode").value="";
-  updateOrder(); receiptPreview.style.display="none";
+  discount=0;document.getElementById("promoCode").value="";
+  updateOrder();receiptPreview.style.display="none";
   document.getElementById("receipt").value="";
   document.getElementById("success").style.display="none";
 }
 
-window.sendOrder = function(){
+window.sendOrder=function(){
   const playerId=document.getElementById("playerId").value.trim();
   const receipt=document.getElementById("receipt").files[0];
-  if(!playerId){alert("⚠️ Enter Player ID!"); return;}
-  if(order.length===0){alert("⚠️ Select at least one package!"); return;}
-  if(!receipt){alert("⚠️ Upload payment receipt!"); return;}
+  if(!playerId){alert("⚠️ Enter Player ID!");return;}
+  if(order.length===0){alert("⚠️ Select at least one package!");return;}
+  if(!receipt){alert("⚠️ Upload payment receipt!");return;}
 
   const orderNumber="ORD"+Date.now();
   let orderText=order.map(o=>`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`).join("\n");
 
-  const { jsPDF } = window.jspdf;
+  const { jsPDF }=window.jspdf;
   const pdf=new jsPDF('p','mm','a4');
-  pdf.setFont("helvetica","bold"); pdf.setFontSize(16);
+  pdf.setFont("helvetica","bold");pdf.setFontSize(16);
   pdf.text("💎 FREE FIRE TOP-UP ORDER 💎",105,20,{align:"center"});
-  pdf.setFontSize(12); pdf.setFont("helvetica","normal");
+  pdf.setFontSize(12);pdf.setFont("helvetica","normal");
   pdf.text(`Order No: ${orderNumber}`,10,35);
   pdf.text(`Player ID: ${playerId}`,10,43);
   pdf.text(`Total: ${(total-discount).toLocaleString()} LKR`,10,51);
   pdf.text("Order Summary:",10,59);
-  let y=67; order.forEach(o=>{pdf.text(`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`,12,y); y+=8;});
-  if(receipt && receipt.type.startsWith("image/")){
+  let y=67;order.forEach(o=>{pdf.text(`${o.name} x${o.qty} = ${o.subTotal.toLocaleString()} LKR`,12,y);y+=8;});
+  if(receipt&&receipt.type.startsWith("image/")){
     const reader=new FileReader();
     reader.onload=e=>{
       pdf.addPage();
       pdf.text("📎 Payment Receipt",10,20);
       pdf.addImage(e.target.result,'JPEG',10,30,180,160);
       pdf.save(`Order_${orderNumber}.pdf`);
-    }; reader.readAsDataURL(receipt);
-  } else pdf.save(`Order_${orderNumber}.pdf`);
+    };reader.readAsDataURL(receipt);
+  }else pdf.save(`Order_${orderNumber}.pdf`);
 
   const message=`
 ╔════════════════════╗
